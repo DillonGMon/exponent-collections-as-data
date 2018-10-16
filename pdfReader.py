@@ -56,19 +56,20 @@ def getURL():
     
     file = open(filename, "r")
     found = 0
-    
+    print("press y to download each file if it matches")
     for line in file:
-        print(dates)
+        #print(dates)
         result= ''  #TO DO : find a solution to human error when submitting the exponent data 
         searchDates = re.search(dates, line)
         if searchDates:
             print(line)
             print(str(searchDates[0]))
-
-            
-            if re.search("exp\-M*[0-9]*\-[0-9]*\-[0-9]*\-[0-9]*\.pdf",line):
-                found +=1
-                result= re.search("exp\-M*[0-9]*\-[0-9]*\-[0-9]*\-[0-9]*\.pdf",line)
+            confirmation = input()
+            if confirmation == 'y':
+                
+                  if re.search("exp\-M*[0-9]*\-[0-9]*\-[0-9]*\-[0-9]*\.pdf",line):
+                    found +=1
+                    result= re.search("exp\-M*[0-9]*\-[0-9]*\-[0-9]*\-[0-9]*\.pdf",line)
 
         
         if result != '':
