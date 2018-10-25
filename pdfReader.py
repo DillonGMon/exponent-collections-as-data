@@ -5,6 +5,9 @@ import requests
 import re
 import justext
 import argparse
+import string
+
+#to run the program, enter it in command line with the argument for the year to download
 
 #takes in URL for the item page and the name of the file and downloads the corresponding pdf
 def fileDownload(url,filename):             
@@ -40,9 +43,10 @@ def writeToFile(output, filename):
     
     file = open(path, "w", encoding ='ascii', errors= 'ignore')
     for line in output:
+       # line.translate(None, string.punctuation)
         file.write(line)
     file.close()
-#gets all the exponent pdfs for a given academic year
+#gets all the exponent pdfs for a given year.
 def getURL():
    
     parser = argparse.ArgumentParser()
@@ -50,25 +54,27 @@ def getURL():
     dates = parser.parse_args().dates
     filenames = []
     searchURL='http://arc.lib.montana.edu/msu-exponent/search.php?year='+'"'+dates+'"'
-    print(searchURL)
+    #print(searchURL)
     filename = dates +".txt"
     fileDownload(searchURL, filename)
     
     file = open(filename, "r")
     found = 0
-    
+    print("press y to add each file if it matches or n if it doesn't \n \n")
     for line in file:
-        print(dates)
-        result= ''  #TO DO : find a solution to human error when submitting the exponent data 
-        searchDates = re.search(dates, line)
+        #print(dates)
+        result= ''  
+        searchDates = re.search("<dl.*/dl>", line)
         if searchDates:
-            print(line)
-            print(str(searchDates[0]))
-
-            
-            if re.search("exp\-M*[0-9]*\-[0-9]*\-[0-9]*\-[0-9]*\.pdf",line):
-                found +=1
-                result= re.search("exp\-M*[0-9]*\-[0-9]*\-[0-9]*\-[0-9]*\.pdf",line)
+           
+                
+            if re.search("exp\-M*[0-9]*\-[0-9]*\-[0-9]*\-[0-9]*\.pdf",searchDates[0]):
+                 print(str(searchDates[0]))
+                 #print(str(searchDates[0]))
+                 confirmation = input()
+                 if confirmation == 'y':
+                    found +=1
+                    result= re.search("exp\-M*[0-9]*\-[0-9]*\-[0-9]*\-[0-9]*\.pdf",searchDates[0])
 
         
         if result != '':
