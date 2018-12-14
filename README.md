@@ -17,5 +17,4 @@ experimenting with collections as data using the MSU exponent
   The basic bag of words analysis can concatenate all the text in the output folder into one file if you want a less granular dataset. Alternatively, if you would rather just run it on a single year, just make a file titled output.txt and paste the year to be analyzed in that file. 
   Once the file is processed it puts the bag in a format of (number of occurances) (word) with newlines between each occurrence, word pair. The bag is also available in sorted by occurrence and unsorted if either is easier to work with in a certain context. There is also functionality for making a venn diagram, dispalying shared words vs unique words, based on two separate bags as a way to highlight different types of analysis that could be done on this material.
   
-
 <img src=/images/onldnew.png>
