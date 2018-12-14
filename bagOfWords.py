@@ -172,7 +172,7 @@ def getVenn():
     setlabels = []
     label= input("how to label the first dataset?\n")
     setlabels.append(label)
-    label= input("how to label the first dataset?\n")
+    label= input("how to label the second dataset?\n")
     setlabels.append(label)
     ven = venn2([old,new], set_labels=setlabels)
     plt.title('exponent word relations')
