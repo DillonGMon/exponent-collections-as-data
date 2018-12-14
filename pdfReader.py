@@ -6,6 +6,8 @@ import re
 import justext
 import argparse
 import string
+from spellchecker import SpellChecker
+
 
 #to run the program, enter it in command line with the argument for the year to download
 
@@ -32,7 +34,12 @@ def readPDF(filename):
         #print(page.extractText())
         x+=1
     pdf_file.close()
-    writeToFile(fullText, outputname)
+    punctuations = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
+    no_punct = ""
+    for char in fullText:
+           if char not in punctuations:
+               no_punct = no_punct + char.lower()
+    writeToFile(no_punct, outputname)
     os.remove(filename)
 
 #helper function that actually puts the text into a .txt 
@@ -43,18 +50,23 @@ def writeToFile(output, filename):
     
     file = open(path, "w", encoding ='ascii', errors= 'ignore')
     for line in output:
-       # line.translate(None, string.punctuation)
+       
         file.write(line)
+    
     file.close()
+    #spellcheck(path)
+
 #gets all the exponent pdfs for a given year.
 def getURL():
    
     parser = argparse.ArgumentParser()
     parser.add_argument('dates')
+    parser.add_argument('issues')
     dates = parser.parse_args().dates
+    issues = parser.parse_args().issues
     filenames = []
-    searchURL='http://arc.lib.montana.edu/msu-exponent/search.php?year='+'"'+dates+'"'
-    #print(searchURL)
+    searchURL='http://arc.lib.montana.edu/msu-exponent/search.php?year='+'"'+dates+'"&start='+str(issues)+'&limit=15'
+    print(searchURL)
     filename = dates +".txt"
     fileDownload(searchURL, filename)
     
@@ -85,8 +97,29 @@ def getURL():
     #filenames = list(filter(None, filenames))
     for item in filenames:
          print(item)
-    #os.remove(filename)
-    return filenames    
+    os.remove(filename)
+    return filenames
+
+def spellcheck(file):   #spellchecker library is incredibly slow and doesn't reliably correct most of the errors in the page: currently unused
+    text = open(file, "r", encoding ='ascii', errors= 'ignore')
+    spell = SpellChecker()
+    count = 0
+    for line in text:
+        wordlist = re.split(' ', line)
+        #print (wordlist)
+        for word in wordlist:
+
+            if word != spell.correction(word):
+                print(word)
+                count +=1
+            #print(spell.correction(word))
+            #print(spell.candidates(word))
+            #print("--------------------")
+
+    text.close()
+    print(str(count) + " mispelled words")
+
+    
 def main():
     link = "http://arc.lib.montana.edu/msu-exponent/objects/"
     #filename='exp-M01-01-001-012.pdf'
